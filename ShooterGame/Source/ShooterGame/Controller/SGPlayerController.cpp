@@ -113,3 +113,11 @@ void ASGPlayerController::StopSprint()
 		CachedBasedCharacter->StopSprint();
 	}
 }
+
+void ASGPlayerController::Fire()
+{
+	if(CachedBasedCharacter.IsValid())
+	{
+		CachedBasedCharacter->Fire();
+	}
+}

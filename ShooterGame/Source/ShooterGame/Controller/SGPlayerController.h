@@ -43,6 +43,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Controls | Input actions")
 	UInputAction* SprintAction;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Controls | Input actions")
+	UInputAction* FireAction;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Controls | Input actions | Mapping contexts")
 	UInputMappingContext* BaseMappingContext;
 
@@ -55,6 +58,7 @@ protected:
 	void JumpReleased();
 	void StartSprint();
 	void StopSprint();
+	void Fire();
 
 private:
 

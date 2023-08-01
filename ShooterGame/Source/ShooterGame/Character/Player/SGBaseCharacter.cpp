@@ -3,6 +3,8 @@
 
 #include "SGBaseCharacter.h"
 
+#include "Engine/DamageEvents.h"
+#include "ShooterGame/Components/Character/SGAttributeComponent.h"
 #include "ShooterGame/Components/Character/SGCharacterMovementComponent.h"
 
 ASGBaseCharacter::ASGBaseCharacter(const FObjectInitializer& ObjectInitializer)
@@ -11,6 +13,7 @@ ASGBaseCharacter::ASGBaseCharacter(const FObjectInitializer& ObjectInitializer)
 	PrimaryActorTick.bCanEverTick = true;
 
 	SGCharacterMovementComponent = Cast<USGCharacterMovementComponent>(GetCharacterMovement());
+	SGAttributeComponent = CreateDefaultSubobject<USGAttributeComponent>(TEXT("AttributeComponent"));
 
 	GetMesh()->bOwnerNoSee = true;
 }
@@ -54,3 +57,25 @@ void ASGBaseCharacter::StopSprint()
 	SGCharacterMovementComponent->SetIsSprinting(false);
 }
 
+void ASGBaseCharacter::Fire()
+{
+	if(HasAuthority())
+	{
+		FHitResult HitResult;
+		FCollisionQueryParams CollisionQueryParams;
+		CollisionQueryParams.AddIgnoredActor(this);
+		if(GetWorld()->LineTraceSingleByChannel(HitResult, GetActorLocation(), GetActorLocation() + GetActorForwardVector() * 500.0f, ECC_Visibility, CollisionQueryParams))
+		{
+			if(Cast<ASGBaseCharacter>(HitResult.GetActor()))
+			{
+				HitResult.GetActor()->TakeDamage(Damage, FDamageEvent{}, GetController(), this);
+			}
+		}
+	}
+}
+
+float ASGBaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
+                                   AActor* DamageCauser)
+{
+	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+}

@@ -5,9 +5,9 @@
 #include "CoreMinimal.h"
 #include "InputActionValue.h"
 #include "GameFramework/Character.h"
-#include "GameFramework/CharacterMovementComponent.h"
 #include "SGBaseCharacter.generated.h"
 
+class USGAttributeComponent;
 class USGCharacterMovementComponent;
 UCLASS()
 class SHOOTERGAME_API ASGBaseCharacter : public ACharacter
@@ -24,6 +24,9 @@ public:
 	virtual void Jump() override;
 	virtual void StartSprint();
 	virtual void StopSprint();
+	virtual void Fire();
+
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 	FORCEINLINE USGCharacterMovementComponent* GetSGCharacterMovementComponent() const { return SGCharacterMovementComponent; }
 
@@ -31,6 +34,12 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Components")
+	float Damage;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Components")
 	USGCharacterMovementComponent* SGCharacterMovementComponent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Components")
+	USGAttributeComponent* SGAttributeComponent;
 
 };
